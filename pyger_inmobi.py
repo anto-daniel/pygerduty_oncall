@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 now = datetime.now()
 onehour = now + timedelta(hours=1)
 
-API_USER = "inmobi.pagerduty.com"
-API_PWD = "f5CVg44Ho4UzkBNcdmag"
+API_USER = "XXXXXX.pagerduty.com"
+API_PWD = "XXXXXXXX"
 pager = pygerduty.PagerDuty(API_USER, API_PWD)
 
 for schedule in pager.schedules.list():
