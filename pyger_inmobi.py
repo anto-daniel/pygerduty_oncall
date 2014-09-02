@@ -1,18 +1,36 @@
+#!/usr/bin/env python
+""" PagerDuty Oncall List  """
+
 import pygerduty
 from datetime import datetime, timedelta
 
-now = datetime.now()
-onehour = now + timedelta(hours=1)
+NOW = datetime.now().__str__()
+ONE_HOUR = NOW + timedelta(hours=1).__str__()
 
-API_USER = "XXXXXX.pagerduty.com"
-API_PWD = "XXXXXXXX"
-pager = pygerduty.PagerDuty(API_USER, API_PWD)
+API_USER = "inmobi.pagerduty.com"
+API_PWD = "f5CVg44Ho4UzkBNcdmag"
+PAGER = pygerduty.PagerDuty(API_USER, API_PWD)
 
-for schedule in pager.schedules.list():
+def get_contacts(userid):
+    """ To get the contact number of the user using userid """
+
+    userdesc = PAGER.users.show(userid)
+    userdetail = userdesc.contact_methods.list()
+    for userattr in userdetail:
+        userphone = userattr.to_json()
+        if not userphone.get("phone_number") is None:
+            return userphone.get("phone_number")
+
+
+for schedule in PAGER.schedules.list():
     shname = schedule.name
-    teamdesc = pager.schedules.show(schedule.id)
-    for team in teamdesc.entries.list(since=""+now.__str__()+"", until=""+onehour.__str__()+"", overflow=False):
+    teamdesc = PAGER.schedules.show(schedule.id)
+    teams = teamdesc.entries.list(since=""+NOW+"", until=""+ONE_HOUR+"",
+     overflow=False)
+    for team in teams:
         on = team.to_json()
         oncall = on['user']['name']
-        print schedule.name+": "+oncall
-    
+        oncallid = on['user']['id']
+        phone = get_contacts(oncallid)
+        print(schedule.name+"\t Oncall:\t  "+oncall+" ("+phone+")")
+
