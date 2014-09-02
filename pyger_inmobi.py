@@ -8,7 +8,7 @@ NOW = datetime.now().__str__()
 ONE_HOUR = NOW + timedelta(hours=1).__str__()
 
 API_USER = "inmobi.pagerduty.com"
-API_PWD = "f5CVg44Ho4UzkBNcdmag"
+API_PWD = "XXXXXXXXXX"
 PAGER = pygerduty.PagerDuty(API_USER, API_PWD)
 
 def get_contacts(userid):
